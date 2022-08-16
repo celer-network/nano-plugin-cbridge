@@ -1,3 +1,0 @@
-[submodule "app-ethereum"]
-	path = app-ethereum
-	url = https://github.com/LedgerHQ/app-ethereum
