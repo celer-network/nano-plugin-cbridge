@@ -23,5 +23,3 @@ tests/node_modules
 tests/lib
 tests/elfs
 tests/snapshots
-
-.github/
