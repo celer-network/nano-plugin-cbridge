@@ -4,7 +4,8 @@
 #include "eth_plugin_interface.h"
 #include <string.h>
 
-// Number of selectors defined in this plugin. Should match the enum `selector_t`.
+// Number of selectors defined in this plugin. Should match the enum 
+// `selector_t`.
 #define NUM_SELECTORS 5
 
 // Name of the plugin.
@@ -13,11 +14,11 @@
 // Enumeration of the different selectors possible.
 // Should follow the exact same order as the array declared in main.c
 typedef enum {
-    POOL_BASED_SEND_ERC20 = 0,
-    POOL_BASED_SEND_NATIVE = 1,
-    PEGGED_TOKEN_DEPOSIT_MINT = 2,
-    PEGGED_TOKEN_BURN_WITHDRAW = 3,
-    POOL_BASED_TOKEN_REFUND = 4,
+POOL_BASED_SEND_ERC20 = 0,
+POOL_BASED_SEND_NATIVE = 1,
+PEGGED_TOKEN_DEPOSIT_MINT = 2,
+PEGGED_TOKEN_BURN_WITHDRAW = 3,
+POOL_BASED_TOKEN_REFUND = 4,
 } selector_t;
 
 // Enumeration used to parse the smart contract data.
