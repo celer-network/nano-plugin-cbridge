@@ -19,8 +19,8 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "os.h"
 #include "cx.h"
+#include "os.h"
 
 #include "boilerplate_plugin.h"
 
@@ -30,8 +30,8 @@ static const uint32_t SEND_NATIVE_TOKENS_SELECTOR = 0x3f2e5fc3;
 static const uint32_t DEPOSIT_MINT_SELECTOR = 0x23463624;
 static const uint32_t BURN_WITHDRAW_SELECTOR = 0xde790c7e;
 static const uint32_t REFUND = 0xa21a9280;
-// Array of all the different boilerplate selectors. Make sure this follows the same order as the
-// enum defined in `boilerplate_plugin.h`
+// Array of all the different boilerplate selectors. Make sure this follows the
+// same order as the enum defined in `boilerplate_plugin.h`
 const uint32_t CBRIDGE_SELECTORS[NUM_SELECTORS] = {
     SEND_ERC20_TOKENS_SELECTOR,
     SEND_NATIVE_TOKENS_SELECTOR,
@@ -43,78 +43,79 @@ const uint32_t CBRIDGE_SELECTORS[NUM_SELECTORS] = {
 // Function to dispatch calls from the ethereum app.
 void dispatch_plugin_calls(int message, void *parameters) {
 
-    switch (message) {
-        case ETH_PLUGIN_INIT_CONTRACT:
-            handle_init_contract(parameters);
-            break;
-        case ETH_PLUGIN_PROVIDE_PARAMETER:
-            handle_provide_parameter(parameters);
-            break;
-        case ETH_PLUGIN_FINALIZE:
-            handle_finalize(parameters);
-            break;
-        case ETH_PLUGIN_PROVIDE_INFO:
-            handle_provide_token(parameters);
-            break;
-        case ETH_PLUGIN_QUERY_CONTRACT_ID:
-            handle_query_contract_id(parameters);
-            break;
-        case ETH_PLUGIN_QUERY_CONTRACT_UI:
-            handle_query_contract_ui(parameters);
-            break;
-        default:
-            PRINTF("Unhandled message %d\n", message);
-            break;
-    }
+  switch (message) {
+  case ETH_PLUGIN_INIT_CONTRACT:
+    handle_init_contract(parameters);
+    break;
+  case ETH_PLUGIN_PROVIDE_PARAMETER:
+    handle_provide_parameter(parameters);
+    break;
+  case ETH_PLUGIN_FINALIZE:
+    handle_finalize(parameters);
+    break;
+  case ETH_PLUGIN_PROVIDE_INFO:
+    handle_provide_token(parameters);
+    break;
+  case ETH_PLUGIN_QUERY_CONTRACT_ID:
+    handle_query_contract_id(parameters);
+    break;
+  case ETH_PLUGIN_QUERY_CONTRACT_UI:
+    handle_query_contract_ui(parameters);
+    break;
+  default:
+    PRINTF("Unhandled message %d\n", message);
+    break;
+  }
 }
 
 // Calls the ethereum app.
 void call_app_ethereum() {
-    unsigned int libcall_params[3];
-    libcall_params[0] = (unsigned int) "Ethereum";
-    libcall_params[1] = 0x100;
-    libcall_params[2] = RUN_APPLICATION;
-    os_lib_call((unsigned int *) &libcall_params);
+  unsigned int libcall_params[3];
+  libcall_params[0] = (unsigned int)"Ethereum";
+  libcall_params[1] = 0x100;
+  libcall_params[2] = RUN_APPLICATION;
+  os_lib_call((unsigned int *)&libcall_params);
 }
 
 // Weird low-level black magic. No need to edit this.
 __attribute__((section(".boot"))) int main(int arg0) {
-    // Exit critical section
-    __asm volatile("cpsie i");
+  // Exit critical section
+  __asm volatile("cpsie i");
 
-    // Ensure exception will work as planned
-    os_boot();
+  // Ensure exception will work as planned
+  os_boot();
 
-    // Try catch block. Please read the docs for more information on how to use those!
-    BEGIN_TRY {
-        TRY {
-            // Low-level black magic.
-            check_api_level(CX_COMPAT_APILEVEL);
+  // Try catch block. Please read the docs for more information on how to use
+  // those!
+  BEGIN_TRY {
+    TRY {
+      // Low-level black magic.
+      check_api_level(CX_COMPAT_APILEVEL);
 
-            // Check if we are called from the dashboard.
-            if (!arg0) {
-                // Called from dashboard, launch Ethereum app
-                call_app_ethereum();
-                return 0;
-            } else {
-                // Not called from dashboard: called from the ethereum app!
-                const unsigned int *args = (const unsigned int *) arg0;
+      // Check if we are called from the dashboard.
+      if (!arg0) {
+        // Called from dashboard, launch Ethereum app
+        call_app_ethereum();
+        return 0;
+      } else {
+        // Not called from dashboard: called from the ethereum app!
+        const unsigned int *args = (const unsigned int *)arg0;
 
-                // If `ETH_PLUGIN_CHECK_PRESENCE` is set, this means the caller is just trying to
-                // know whether this app exists or not. We can skip `dispatch_plugin_calls`.
-                if (args[0] != ETH_PLUGIN_CHECK_PRESENCE) {
-                    dispatch_plugin_calls(args[0], (void *) args[1]);
-                }
-
-                // Call `os_lib_end`, go back to the ethereum app.
-                os_lib_end();
-            }
+        // If `ETH_PLUGIN_CHECK_PRESENCE` is set, this means the caller is just
+        // trying to know whether this app exists or not. We can skip
+        // `dispatch_plugin_calls`.
+        if (args[0] != ETH_PLUGIN_CHECK_PRESENCE) {
+          dispatch_plugin_calls(args[0], (void *)args[1]);
         }
-        FINALLY {
-        }
+
+        // Call `os_lib_end`, go back to the ethereum app.
+        os_lib_end();
+      }
     }
-    END_TRY;
+    FINALLY {}
+  }
+  END_TRY;
 
-    // Will not get reached.
-    return 0;
+  // Will not get reached.
+  return 0;
 }
