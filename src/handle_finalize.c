@@ -1,4 +1,4 @@
-#include "boilerplate_plugin.h"
+#include "cbridge_plugin.h"
 
 void handle_finalize(void *parameters) {
 

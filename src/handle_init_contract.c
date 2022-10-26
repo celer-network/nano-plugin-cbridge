@@ -1,4 +1,4 @@
-#include "boilerplate_plugin.h"
+#include "cbridge_plugin.h"
 
 static int find_selector(uint32_t selector, const uint32_t *selectors, size_t n,
                          selector_t *out) {
