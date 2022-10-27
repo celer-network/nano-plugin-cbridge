@@ -1,4 +1,4 @@
-#include "boilerplate_plugin.h"
+#include "cbridge_plugin.h"
 #include <stdio.h>
 #include <stdlib.h>
 

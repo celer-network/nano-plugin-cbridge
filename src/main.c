@@ -22,7 +22,7 @@
 #include "cx.h"
 #include "os.h"
 
-#include "boilerplate_plugin.h"
+#include "cbridge_plugin.h"
 
 // List of selectors supported by this plugin.
 static const uint32_t SEND_ERC20_TOKENS_SELECTOR = 0xa5977fbb;

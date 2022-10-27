@@ -1,4 +1,4 @@
-#include "boilerplate_plugin.h"
+#include "cbridge_plugin.h"
 
 static void
 handle_send_erc_20_tokens_paramters(ethPluginProvideParameter_t *msg,
