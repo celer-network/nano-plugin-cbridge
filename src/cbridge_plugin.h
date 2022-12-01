@@ -43,7 +43,7 @@ typedef struct context_t {
   uint8_t receiver[ADDRESS_LENGTH];
   uint8_t token[ADDRESS_LENGTH];
   uint8_t amount_in[INT256_LENGTH];
-  uint8_t dst_chain_id[4];
+  uint32_t dst_chain_id;
 
   char ticker[MAX_TICKER_LEN];
   uint8_t decimals;

@@ -42,7 +42,7 @@ static void set_receive_ui(ethQueryContractUI_t *msg,
                            const context_t *context) {
   strlcpy(msg->title, "Destination Chain.", msg->titleLength);
 
-  print_chain_id(U4BE(context->dst_chain_id, 0), msg->msg, msg->msgLength);
+  print_chain_id(context->dst_chain_id, msg->msg, msg->msgLength);
 }
 
 void handle_query_contract_ui(void *parameters) {
