@@ -22,7 +22,7 @@ handle_send_erc_20_tokens_paramters(ethPluginProvideParameter_t *msg,
     context->next_param = DST_CHAIN_ID;
     break;
   case DST_CHAIN_ID:
-    memmove(context->dst_chain_id, msg->parameter + 32 - 4, 4);
+    U4BE_from_parameter(context->dst_chain_id, msg->parameter);
 
     context->next_param = NONCE;
     context->go_to_offset = true;
@@ -52,7 +52,7 @@ handle_send_native_tokens_paramters(ethPluginProvideParameter_t *msg,
     context->next_param = DST_CHAIN_ID;
     break;
   case DST_CHAIN_ID:
-    memmove(context->dst_chain_id, msg->parameter + 32 - 4, 4);
+    U4BE_from_parameter(context->dst_chain_id, msg->parameter);
 
     context->next_param = NONCE;
     context->go_to_offset = true;
@@ -81,7 +81,7 @@ static void handle_pegged_token_deposit(ethPluginProvideParameter_t *msg,
     context->next_param = DST_CHAIN_ID;
     break;
   case DST_CHAIN_ID:
-    memmove(context->dst_chain_id, msg->parameter + 32 - 4, 4);
+    U4BE_from_parameter(context->dst_chain_id, msg->parameter);
     context->next_param = NONCE;
     context->go_to_offset = true;
     break;

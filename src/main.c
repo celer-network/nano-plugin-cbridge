@@ -24,22 +24,6 @@
 
 #include "cbridge_plugin.h"
 
-// List of selectors supported by this plugin.
-static const uint32_t SEND_ERC20_TOKENS_SELECTOR = 0xa5977fbb;
-static const uint32_t SEND_NATIVE_TOKENS_SELECTOR = 0x3f2e5fc3;
-static const uint32_t DEPOSIT_MINT_SELECTOR = 0x23463624;
-static const uint32_t BURN_WITHDRAW_SELECTOR = 0xde790c7e;
-static const uint32_t REFUND = 0xa21a9280;
-// Array of all the different boilerplate selectors. Make sure this follows the
-// same order as the enum defined in `boilerplate_plugin.h`
-const uint32_t CBRIDGE_SELECTORS[NUM_SELECTORS] = {
-    SEND_ERC20_TOKENS_SELECTOR,
-    SEND_NATIVE_TOKENS_SELECTOR,
-    DEPOSIT_MINT_SELECTOR,
-    BURN_WITHDRAW_SELECTOR,
-    REFUND,
-};
-
 // Function to dispatch calls from the ethereum app.
 void dispatch_plugin_calls(int message, void *parameters) {
 
@@ -66,6 +50,16 @@ void dispatch_plugin_calls(int message, void *parameters) {
     PRINTF("Unhandled message %d\n", message);
     break;
   }
+}
+
+void handle_query_ui_exception(unsigned int *args) {
+    switch (args[0]) {
+        case ETH_PLUGIN_QUERY_CONTRACT_UI:
+            ((ethQueryContractUI_t *) args[1])->result = ETH_PLUGIN_RESULT_ERROR;
+            break;
+        default:
+            break;
+    }
 }
 
 // Calls the ethereum app.
@@ -107,12 +101,24 @@ __attribute__((section(".boot"))) int main(int arg0) {
         if (args[0] != ETH_PLUGIN_CHECK_PRESENCE) {
           dispatch_plugin_calls(args[0], (void *)args[1]);
         }
-
-        // Call `os_lib_end`, go back to the ethereum app.
-        os_lib_end();
       }
     }
-    FINALLY {}
+    CATCH_OTHER(e) {
+      switch (e) {
+      // These exceptions are only generated on handle_query_contract_ui()
+      case 0x6502:
+      case EXCEPTION_OVERFLOW:
+        handle_query_ui_exception((unsigned int *)arg0);
+        break;
+      default:
+        break;
+      }
+      PRINTF("Exception 0x%x caught\n", e);
+    }
+    FINALLY {
+        // Call `os_lib_end`, go back to the ethereum app.
+        os_lib_end();
+    }
   }
   END_TRY;
 
