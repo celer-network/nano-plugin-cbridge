@@ -54,7 +54,6 @@ function withdraw(
 */
 static const uint32_t REFUND = 0xa21a9280;
 
-
 // Array of all the different boilerplate selectors. Make sure this follows the
 // same order as the enum defined in `boilerplate_plugin.h`
 const uint32_t CBRIDGE_SELECTORS[NUM_SELECTORS] = {

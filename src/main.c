@@ -54,11 +54,11 @@ void dispatch_plugin_calls(int message, void *parameters) {
 
 void handle_query_ui_exception(unsigned int *args) {
     switch (args[0]) {
-        case ETH_PLUGIN_QUERY_CONTRACT_UI:
-            ((ethQueryContractUI_t *) args[1])->result = ETH_PLUGIN_RESULT_ERROR;
-            break;
-        default:
-            break;
+    case ETH_PLUGIN_QUERY_CONTRACT_UI:
+        ((ethQueryContractUI_t *) args[1])->result = ETH_PLUGIN_RESULT_ERROR;
+        break;
+    default:
+        break;
     }
 }
 
@@ -116,8 +116,8 @@ __attribute__((section(".boot"))) int main(int arg0) {
       PRINTF("Exception 0x%x caught\n", e);
     }
     FINALLY {
-        // Call `os_lib_end`, go back to the ethereum app.
-        os_lib_end();
+      // Call `os_lib_end`, go back to the ethereum app.
+      os_lib_end();
     }
   }
   END_TRY;
